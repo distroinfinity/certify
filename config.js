@@ -1,3 +1,3 @@
 
-  export const degree = "0xb78eF50CCa69038F4ef391CaD33303e870c20762"
+  export const degree = "0x1fe343AE782B23Ad31627278E1cB56f7257a2396"
   

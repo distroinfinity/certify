@@ -1,25 +1,104 @@
 // import "./App.css";
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import { ethers } from "ethers";
+import { useEffect, useState } from "react";
+import Web3Modal from "web3modal";
+import { degree } from "../config";
+import Degree from "../artifacts/contracts/Degree.sol/Degree.json";
+import { create as ipfsHttpClient } from "ipfs-http-client";
 
-import { useState } from "react";
+const authorization =
+  "Basic " +
+  btoa(
+    "2MGtG4xO5zdSXZINBJVzqkQGe3m" + ":" + "3be239e1397fa806c574a0bcaf5f344f"
+  );
 
-export default function IssueForm() {
+const ipfs = ipfsHttpClient({
+  url: "https://ipfs.infura.io:5001/api/v0",
+  headers: {
+    authorization,
+  },
+});
+
+export default function IssueForm({ showModal, setShowModal }) {
   const [wallet, setWallet] = useState("");
   const [title, setTitle] = useState("");
   const [degreeType, setDegreeType] = useState("");
   const [major, setMajor] = useState("");
   const [cgpa, setCGPA] = useState("");
+  const [desc, setDesc] = useState("");
+  const [cover, setCover] = useState(null);
+
+  async function uploadCover() {
+    let imageUrl;
+    try {
+      const result = await ipfs.add(cover);
+      console.log("infura result", result);
+      imageUrl = `https://certify.infura-ipfs.io/ipfs/${result.path}`;
+    } catch (error) {
+      console.log("Error uploading cover image to ipfs: ", error);
+    }
+    console.log("degree cover is ", imageUrl);
+    return imageUrl;
+  }
+
+  async function uploadToIpfs() {
+    let imageUrl = await uploadCover();
+
+    const data = JSON.stringify({
+      name: title,
+      description: desc,
+      image: imageUrl,
+      attributes: [
+        { trait_type: "CGPA", value: cgpa },
+        { trait_type: "Degree Type", value: degreeType },
+        { trait_type: "Major", value: major },
+      ],
+    });
+
+    let jsonUrl;
+    try {
+      const added = await ipfs.add(data);
+      jsonUrl = `https://certify.infura-ipfs.io/ipfs/${added.path}`;
+    } catch (error) {
+      console.log("Error uploading json data to ipfs: ", error);
+    }
+    return jsonUrl;
+  }
+
   async function handleSubmit() {
-    console.log(wallet, title, degreeType, major, cgpa);
-    if (!wallet || title || degreeType || major || cgpa || !cover) {
+    if (
+      !wallet ||
+      !title ||
+      !degreeType ||
+      !major ||
+      !cgpa ||
+      !cover ||
+      !desc
+    ) {
       return;
     }
+    console.log(wallet, title, degreeType, major, cgpa);
+
+    const url = await uploadToIpfs();
+    console.log("updated json url", url);
+
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(degree, Degree.abi, signer);
+    let isssueDeg = await contract.isssueDegree(wallet, url);
+    console.log("Degree Issued", isssueDeg);
+    setShowModal(false);
   }
-  const [cover, setCover] = useState(null);
 
   async function selectCover(e) {
     const file = e.target.files[0];
     setCover(file);
   }
+
   return (
     <>
       <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -66,6 +145,29 @@ export default function IssueForm() {
                   onChange={(e) => {
                     // console.log("testing", e.target.value);
                     setWallet(e.target.value);
+                  }}
+                />
+              </div>
+              <div>
+                <label htmlFor="wallet-address" className="sr-only">
+                  Description
+                </label>
+                <input
+                  id="desc"
+                  name="desc"
+                  //   type=""
+                  //   autoComplete="email"
+                  required
+                  className="appearance-none rounded-none relative block
+                  w-full px-3 py-2 border border-gray-300
+                  placeholder-gray-500 text-gray-900 rounded-t-md
+                  focus:outline-none focus:ring-indigo-500
+                  focus:border-indigo-500 focus:z-10 sm:text-sm"
+                  placeholder="Set A Description"
+                  value={desc}
+                  onChange={(e) => {
+                    // console.log("testing", e.target.value);
+                    setDesc(e.target.value);
                   }}
                 />
               </div>
@@ -190,26 +292,25 @@ export default function IssueForm() {
               </div>
             </div> */}
 
-            <div>
-              <button
-                type="submit"
-                className="group relative w-full flex justify-center
+            <div></div>
+          </form>
+          <button
+            // type="submit"
+            className="group relative w-full flex justify-center
                 py-2 px-4 border border-transparent text-sm font-medium
                 rounded-md text-white bg-indigo-600 hover:bg-indigo-700
                 focus:outline-none focus:ring-2 focus:ring-offset-2
                 focus:ring-indigo-500"
-                onClick={handleSubmit}
-              >
-                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                  {/* <LockClosedIcon
+            onClick={handleSubmit}
+          >
+            <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+              {/* <LockClosedIcon
                     className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
                     aria-hidden="true"
                   /> */}
-                </span>
-                Submit
-              </button>
-            </div>
-          </form>
+            </span>
+            Submit
+          </button>
         </div>
       </div>
     </>

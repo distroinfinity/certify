@@ -14,7 +14,7 @@ contract Degree is ERC721URIStorage {
         owner = msg.sender;
     }
 
-    mapping(address => bool) public issuedDegress;
+    mapping(address => string) public issuedDegress;
     mapping(address => string) public personToDegree;
 
     modifier onlyOwner() {
@@ -23,20 +23,27 @@ contract Degree is ERC721URIStorage {
         _;
     }
 
-    function isssueDegree(address to) external onlyOwner {
+    function isssueDegree(
+        address to,
+        string memory tokenUri
+    ) external onlyOwner {
         console.log("address to issue", to);
-        issuedDegress[to] = true;
+        issuedDegress[to] = tokenUri;
     }
 
-    function claimDegree(string memory tokenUri) public returns (uint256) {
+    function claimDegree() public returns (uint256) {
         console.log("requesting degree", msg.sender);
-        require(issuedDegress[msg.sender], "Degree is not issued!");
+        // require(issuedDegress[msg.sender], "Degree is not issued!");
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
         _mint(msg.sender, newTokenId);
-        _setTokenURI(newTokenId, tokenUri);
-        personToDegree[msg.sender] = tokenUri;
+        _setTokenURI(newTokenId, issuedDegress[msg.sender]);
+        personToDegree[msg.sender] = issuedDegress[msg.sender];
         // issuedDegress[msg.sender] = false;
         return newTokenId;
+    }
+
+    function getDegree(address to) public view returns (string memory) {
+        return personToDegree[to];
     }
 }

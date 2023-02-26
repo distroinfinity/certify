@@ -27,7 +27,10 @@ export default function DegreeModal({ showModal, setShowModal }) {
                     Please fill in the details that are necessary to generate a
                     Degree over blockchain.
                   </p>
-                  <IssueForm></IssueForm>
+                  <IssueForm
+                    showModal={showModal}
+                    setShowModal={setShowModal}
+                  ></IssueForm>
                 </div>
                 {/*footer*/}
                 <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
