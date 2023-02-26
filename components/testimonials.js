@@ -54,7 +54,7 @@ export default function Testimonials() {
         <div className="lg:col-span-2 xl:col-auto">
           <div className="flex flex-col justify-between w-full h-full bg-gray-100 px-14 rounded-2xl py-14 dark:bg-trueGray-800">
             <p className="text-2xl leading-normal ">
-              Issue a degree for a student.
+              Issue some certificate for someone
             </p>
 
             <button
@@ -62,34 +62,32 @@ export default function Testimonials() {
               type="button"
               onClick={() => setShowModal(true)}
             >
-              Issue A Degree
+              Issue Certificate
             </button>
           </div>
         </div>
         <div className="">
           <div className="flex flex-col justify-between w-full h-full bg-gray-100 px-14 rounded-2xl py-14 dark:bg-trueGray-800">
-            <p className="text-2xl leading-normal ">
-              Request your degree as a student.
-            </p>
+            <p className="text-2xl leading-normal ">Request your certificate</p>
             <button
               className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
               type="button"
               onClick={claimDegree}
             >
-              Request Degree
+              Request Certificate
             </button>
           </div>
         </div>
         <div className="">
           <div className="flex flex-col justify-between w-full h-full bg-gray-100 px-14 rounded-2xl py-14 dark:bg-trueGray-800">
-            <p className="text-2xl leading-normal ">Verify a degree holder.</p>
+            <p className="text-2xl leading-normal ">Verify A Certificate</p>
 
             <button
               className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
               type="button"
               onClick={() => setVerifyModal(true)}
             >
-              Verify A Degree
+              Verify
             </button>
           </div>
         </div>

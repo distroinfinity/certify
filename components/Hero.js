@@ -12,14 +12,14 @@ export default function Hero() {
               Welcome To Certify
             </h1>
             <p className="py-5 text-xl leading-normal text-gray-500 lg:text-xl xl:text-2xl dark:text-gray-300">
-              Certify aims to revolutionize the way we think about college
-              degrees by putting them on blockchain as SBTs. By creating a
-              digital representation of a degree as an NFT, students can have a
-              verifiable, tamper-proof record of their academic achievements
-              that can be easily shared and authenticated. This provides a more
-              efficient and transparent way to store, share and verify academic
-              credentials, while reducing the risk of fraud and
-              misrepresentation.
+              Certify, a decentralized platform that issues NFT certificates,
+              secured by blockchain technology to prevent falsification.
+              Individuals can store their credentials in a secure digital
+              wallet, and employers can verify them with ease. Our platform
+              reduces fraud related to falsified credentials, providing a
+              reliable and efficient solution for employers and educational
+              institutions. Join us today and gain a competitive edge in the job
+              market.
             </p>
 
             <div className="flex flex-col items-start space-y-3 sm:space-x-4 sm:space-y-0 sm:items-center sm:flex-row">
@@ -68,9 +68,7 @@ export default function Hero() {
           </div>
         </div>
       </Container>
-      <Container>
-        
-      </Container>
+      <Container></Container>
     </>
   );
 }

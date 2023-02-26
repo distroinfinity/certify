@@ -23,10 +23,7 @@ contract Degree is ERC721URIStorage {
         _;
     }
 
-    function isssueDegree(
-        address to,
-        string memory tokenUri
-    ) external onlyOwner {
+    function isssueDegree(address to, string memory tokenUri) external {
         console.log("address to issue", to);
         issuedDegress[to] = tokenUri;
     }
