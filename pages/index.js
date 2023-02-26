@@ -8,36 +8,10 @@ import Degree from "../artifacts/contracts/Degree.sol/Degree.json";
 import { Button, Modal } from "web3uikit";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import Header from "../components/Header";
-import DegreeModal from "../components/DegreeModal";
-import VerifyModal from "../components/VerifyModal";
-
-const authorization =
-  "Basic " +
-  btoa(
-    "2MGtG4xO5zdSXZINBJVzqkQGe3m" + ":" + "3be239e1397fa806c574a0bcaf5f344f"
-  );
-
-const ipfs = ipfsHttpClient({
-  url: "https://ipfs.infura.io:5001/api/v0",
-  headers: {
-    authorization,
-  },
-});
+import Testimonials from "../components/testimonials";
+import Hero from "../components/Hero";
 
 export default function Home() {
-  const [showModal, setShowModal] = useState(false);
-  const [verifyModal, setVerifyModal] = useState(false);
-
-  async function claimDegree() {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-    let contract = new ethers.Contract(degree, Degree.abi, signer);
-    let claimedDegreeID = await contract.claimDegree();
-    console.log("claimed degree id", claimedDegreeID);
-  }
-
   return (
     <div className={styles.container}>
       <Head>
@@ -46,43 +20,15 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header></Header>
+      <Hero />
+      <Testimonials />
       <main className={styles.main}>
-        <h1 className={styles.title}>Welcome to Certify</h1>
+        {/* <h1 className={styles.title}>Welcome to Certify</h1>
         <p className={styles.description}>
           Provide indestructible and non fungible certificates as SBTs overchain{" "}
-        </p>
+        </p> */}
         <>
-          <DegreeModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-          ></DegreeModal>
-          <VerifyModal
-            showModal={verifyModal}
-            setShowModal={setVerifyModal}
-          ></VerifyModal>
-
           {/* <Button onClick={handleModal} text="Issue Degree" theme="secondary" /> */}
-          <button
-            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-            type="button"
-            onClick={() => setShowModal(true)}
-          >
-            Issue A Degree
-          </button>
-          <button
-            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-            type="button"
-            onClick={() => setVerifyModal(true)}
-          >
-            Verify A Degree
-          </button>
-          <button
-            className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-            type="button"
-            onClick={claimDegree}
-          >
-            Request Degree
-          </button>
         </>
       </main>
 
